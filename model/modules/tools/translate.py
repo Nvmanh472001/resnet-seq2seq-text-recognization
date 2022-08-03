@@ -23,7 +23,7 @@ def _translate(img, model, max_seq_length=128, sos_token=1, eos_token=2):
             tgt_inp = torch.LongTensor(translated_sentence).to(device)
             output, memory = model.transformer.forward_decoder(tgt_inp, memory)
             output = softmax(output, dim=-1)
-            output = output.to('cpu')
+            output = output.to('cuda')
 
             values, indices  = torch.topk(output, 5)
             

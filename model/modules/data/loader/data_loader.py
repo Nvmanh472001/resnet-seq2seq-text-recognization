@@ -16,7 +16,7 @@ from prefetch_generator import background
 
 from torch.utils.data import Dataset
 from torch.utils.data.sampler import Sampler
-from model.modules.data.pre_process import ImageProcessing
+from model.modules.data.image_processing import ImageProcessing
 from model.modules.data.create_dataset import createDataset
 from model.modules.vocab import Vocab
 
@@ -195,13 +195,10 @@ class Collator(object):
             mask = mask & (tgt_input != 0) & (tgt_input != 1) & (tgt_input != 2)
             tgt_input[mask] = 3
 
-        tgt_padding_mask = np.array(target_weights)==0
-
         rs = {
             'img': torch.FloatTensor(img),
             'tgt_input': torch.LongTensor(tgt_input),
             'tgt_output': torch.LongTensor(tgt_output),
-            'tgt_padding_mask': torch.BoolTensor(tgt_padding_mask),
             'filenames': filenames
         }   
         
@@ -231,7 +228,6 @@ class BucketData(object):
             - img: (N, C, H, W) 
             - tgt_input: (T, N) 
             - tgt_output: (N, T) 
-            - tgt_padding_mask: (N, T) 
         """
         # encoder part
         img = np.array(self.data_list, dtype=np.float32)
@@ -258,8 +254,6 @@ class BucketData(object):
         tgt_output = np.roll(tgt_input, -1, 0).T
         tgt_output[:, -1]=0
         
-        tgt_padding_mask = np.array(target_weights)==0
-
         filenames = self.file_list
 
         self.data_list, self.label_list, self.file_list = [], [], []
@@ -269,7 +263,6 @@ class BucketData(object):
             'img': torch.FloatTensor(img).to(self.device),
             'tgt_input': torch.LongTensor(tgt_input).to(self.device),
             'tgt_output': torch.LongTensor(tgt_output).to(self.device),
-            'tgt_padding_mask':torch.BoolTensor(tgt_padding_mask).to(self.device),
             'filenames': filenames
         }
         

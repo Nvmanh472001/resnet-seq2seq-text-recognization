@@ -1,4 +1,2 @@
-torch=1.8.1
-torchvison
-lmbd
-tqdm
+torch==1.8.1
+einops
