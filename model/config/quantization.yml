@@ -1,0 +1,10 @@
+quantization:
+  backend: fbgemm
+
+  fuse_layers:
+    - [['conv0_1', 'bn0_1'], ['conv0_2', 'bn0_2', 'relu']]
+    - [['conv1', 'bn1'], ['conv2', 'bn2'], ['conv3', 'bn3']]
+    - [['conv4_1', 'bn4_1'], ['conv4_2', 'bn4_2']]
+    - [['conv1', 'bn1'], ['conv2', 'bn2', 'relu']]
+    - [['conv1', 'bn1'], ['conv2', 'bn2', 'relu']]
+    - [['0', '1']]
